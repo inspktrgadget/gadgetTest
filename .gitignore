@@ -1,9 +1,5 @@
 .Rhistory
-gadgetTest/zbraModel
-gadgetTest/zbraInit
-gadgetTest/zbraVersions
-gadgetTest/zbraSetup/timeAreaData/
-gadgetTest/zbraSetup/zbramodelsetupcode.zip
-gadgetTest/zbraSetup/area
-gadgetTest/results/*.pdf
-gadgetTest/results/*.html
+gadTestMod
+gadTestVersions
+results/*.pdf
+results/*.html
