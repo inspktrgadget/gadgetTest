@@ -2,16 +2,11 @@
 # this is a method where a stock assessment is performed using real data
 # and then run n number of times again using output from the previous stock assessment
 # it forms a sort of markov chain of stock assessments
-
+library(methods)
 library(tidyverse)
 library(Rgadget)
-rscript_dir <- "~/R/Rscripts/functions/%s"
-source(sprintf(rscript_dir, "copy_from_dir.R"))
-source(sprintf(rscript_dir, "diffmean.R"))
-source(sprintf(rscript_dir, "expand_suitability.R"))
-source(sprintf(rscript_dir, "add_lengthgroups.R"))
-source(sprintf(rscript_dir, "survey_gadget.R"))
-source(sprintf(rscript_dir, "detect_fleet_likelihood.R"))
+fun_dir <- "~/gadget/models/functions/%s"
+source(sprintf(fun_dir, "mcsa_functions.R"))
 
 base_dir <- "~/gadget/models/gadgetTest/gadTestMod"
 setwd(base_dir)
@@ -47,9 +42,15 @@ lapply(1:n, function(x) {
         sample_selectivity <- 
             expand_suitability(selectivity, lg_means) %>%
             mutate(suit = suit * sampling_prop)
+        const_selectivity <- 
+            expand.grid(stock = unique(fit$stock.std$stock),
+                        fleet = unique(fit$catchdist.fleets$fleetnames),
+                        length = lg_means,
+                        suit = 1,
+                        stringsAsFactors = FALSE)
         stock_data <- 
             add_lengthgroups(fit$stock.std, lg) %>%
-            survey_gadget(length_group = lg, suit_data = sample_selectivity, survey_sd = 0) %>%
+            survey_gadget(length_group = lg, suit_data = const_selectivity, survey_sd = 0) %>%
             filter(number > 0)
         mainfile <- read.gadget.main()
         stockfile <- Rgadget:::read.gadget.stockfiles(mainfile$stockfiles)
@@ -161,6 +162,10 @@ lapply(1:n, function(x) {
                                 quote = FALSE, row.names = FALSE, col.names = FALSE)
                 }
             })
+        gadgetfleet("Modelfiles/fleet", sprintf(iter_dir, x), missingOkay = FALSE) %>%
+            update_suit("spr") %>%
+            update_suit("aut") %>%
+            write.gadget.file(sprintf(iter_dir, x))
         setwd(sprintf(iter_dir, x))
         source("mfrun.R")
         setwd(base_dir)

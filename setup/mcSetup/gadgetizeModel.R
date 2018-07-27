@@ -4,13 +4,8 @@
 
 library(tidyverse)
 library(Rgadget)
-rscript_dir <- "~/R/Rscripts/functions/%s"
-source(sprintf(rscript_dir, "copy_from_dir.R"))
-source(sprintf(rscript_dir, "diffmean.R"))
-source(sprintf(rscript_dir, "expand_suitability.R"))
-source(sprintf(rscript_dir, "add_lengthgroups.R"))
-source(sprintf(rscript_dir, "survey_gadget.R"))
-source(sprintf(rscript_dir, "detect_fleet_likelihood.R"))
+fun_dir <- "~/gadget/models/functions/%s"
+source(sprintf(fun_dir, "mcsa_functions.R"))
 
 base_dir <- "~/gadget/models/gadgetTest"
 setwd(base_dir)
@@ -29,4 +24,4 @@ source(sprintf("%s/copyGadgetModel.R", setup.d))
 source(sprintf("%s/mergeDataFiles.R", setup.d))
 
 # copy over mfrun.R file
-file.copy(sprintf("%s/mfrun.R", setup.d))
+file.copy(sprintf("%s/mfrun.R", setup.d), sprintf("%s/mfrun.R", gd), overwrite = TRUE)

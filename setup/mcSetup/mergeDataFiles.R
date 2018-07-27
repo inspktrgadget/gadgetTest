@@ -96,3 +96,7 @@ initmod_datafiles <-
         }
     })
 
+gadgetfleet("Modelfiles/fleet", gd, missingOkay = FALSE) %>%
+    update_suit("spr") %>%
+    update_suit("aut") %>%
+    write.gadget.file(gd)

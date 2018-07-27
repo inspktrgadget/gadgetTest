@@ -1,4 +1,11 @@
 # setup some useful shortcut names for directories
+if (!file.exists("gadTestMod/initMod")) {
+    wd <- getwd()
+    setwd("gadTestMod")
+    dir.create("initMod")
+    system("mv * initMod")
+    setwd(wd)
+}
 initmod_dir <- "gadTestMod/initMod"
 gd <- "gadTestMod/iterMod_1"
 dat_dir <- paste(gd, "Data", sep = "/")

@@ -14,9 +14,15 @@ sampling_prop <- 0.01
 sample_selectivity <- 
     expand_suitability(selectivity, lg_means) %>%
     mutate(suit = suit * sampling_prop)
+const_selectivity <- 
+    expand.grid(stock = unique(fit$stock.std$stock),
+                fleet = unique(fit$catchdist.fleets$fleetnames),
+                length = lg_means,
+                suit = 1,
+                stringsAsFactors = FALSE)
 stock_data <- 
     add_lengthgroups(fit$stock.std, lg) %>%
-    survey_gadget(length_group = lg, suit_data = sample_selectivity, survey_sd = 0) %>%
+    survey_gadget(length_group = lg, suit_data = const_selectivity, survey_sd = 0) %>%
     filter(number > 0)
 mainfile <- read.gadget.main()
 stockfile <- Rgadget:::read.gadget.stockfiles(mainfile$stockfiles)
